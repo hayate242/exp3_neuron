@@ -1,0 +1,30 @@
+[e1589naka@CentsOS66 3-1]$ gprolog
+GNU Prolog 1.3.1
+By Daniel Diaz
+Copyright (C) 1999-2009 Daniel Diaz
+| ?- consult(treat).
+compiling /home/e15/e1589naka/exp3/3-1/treat.pl for byte code...
+/home/e15/e1589naka/exp3/3-1/treat.pl compiled, 14 lines read - 927 bytes written, 11 ms
+
+yes
+| ?- trace.
+The debugger will first creep -- showing everything (trace)
+
+yes
+{trace}
+| ?- treat(taro,jhon).
+      1    1  Call: treat(taro,jhon) ? 
+      2    2  Call: veterinarian(taro) ? 
+      3    3  Call: has_qualification(taro) ? 
+      3    3  Exit: has_qualification(taro) ? 
+      2    2  Exit: veterinarian(taro) ? 
+      4    2  Call: is_animal(jhon) ? 
+      5    3  Call: is_dog(jhon) ? 
+      5    3  Exit: is_dog(jhon) ? 
+      4    2  Exit: is_animal(jhon) ? 
+      1    1  Exit: treat(taro,jhon) ? 
+
+yes
+
+反駁同種次
+http://telracsmoratori.blog.fc2.com/blog-entry-158.html

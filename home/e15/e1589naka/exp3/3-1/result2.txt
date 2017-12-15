@@ -1,0 +1,136 @@
+| ?- connected(start,goal).
+      1    1  Call: connected(start,goal) ?
+      2    2  Call: adjacent(start,goal) ?
+      2    2  Fail: adjacent(start,goal) ?
+      2    2  Call: adjacent(start,_79) ? 
+      2    2  Exit: adjacent(start,1) ?
+      3    2  Call: connected(1,goal) ?
+      4    3  Call: adjacent(1,goal) ?
+      4    3  Fail: adjacent(1,goal) ?
+      4    3  Call: adjacent(1,_128) ?
+      4    3  Exit: adjacent(1,2) ?
+      5    3  Call: connected(2,goal) ?
+      6    4  Call: adjacent(2,goal) ?
+      6    4  Fail: adjacent(2,goal) ?
+      6    4  Call: adjacent(2,_177) ?
+      6    4  Exit: adjacent(2,5) ?
+      7    4  Call: connected(5,goal) ?
+      8    5  Call: adjacent(5,goal) ?
+      8    5  Fail: adjacent(5,goal) ?
+      8    5  Call: adjacent(5,_226) ?
+      8    5  Exit: adjacent(5,11) ?
+      9    5  Call: connected(11,goal) ?
+     10    6  Call: adjacent(11,goal) ?
+     10    6  Fail: adjacent(11,goal) ?
+     10    6  Call: adjacent(11,_275) ?
+     10    6  Fail: adjacent(11,_263) ?
+      9    5  Fail: connected(11,goal) ?
+      8    5  Redo: adjacent(5,11) ?
+      8    5  Exit: adjacent(5,12) ?
+      9    5  Call: connected(12,goal) ?
+     10    6  Call: adjacent(12,goal) ?
+     10    6  Fail: adjacent(12,goal) ?
+     10    6  Call: adjacent(12,_275) ?
+     10    6  Fail: adjacent(12,_263) ?
+      9    5  Fail: connected(12,goal) ?
+      7    4  Fail: connected(5,goal) ?
+      6    4  Redo: adjacent(2,5) ?
+      6    4  Exit: adjacent(2,6) ?
+      7    4  Call: connected(6,goal) ?
+      8    5  Call: adjacent(6,goal) ?
+      8    5  Fail: adjacent(6,goal) ?
+      8    5  Call: adjacent(6,_226) ?
+      8    5  Exit: adjacent(6,14) ?
+      9    5  Call: connected(14,goal) ?
+     10    6  Call: adjacent(14,goal) ?
+     10    6  Fail: adjacent(14,goal) ?
+     10    6  Call: adjacent(14,_275) ?
+     10    6  Fail: adjacent(14,_263) ?
+      9    5  Fail: connected(14,goal) ?
+      8    5  Redo: adjacent(6,14) ?
+      8    5  Exit: adjacent(6,13) ?
+      9    5  Call: connected(13,goal) ?
+     10    6  Call: adjacent(13,goal) ?
+     10    6  Fail: adjacent(13,goal) ?
+     10    6  Call: adjacent(13,_275) ?
+     10    6  Fail: adjacent(13,_263) ?
+      9    5  Fail: connected(13,goal) ?
+      7    4  Fail: connected(6,goal) ?
+      5    3  Fail: connected(2,goal) ?
+      4    3  Redo: adjacent(1,2) ?
+      4    3  Exit: adjacent(1,3) ?
+      5    3  Call: connected(3,goal) ?
+      6    4  Call: adjacent(3,goal) ?
+      6    4  Fail: adjacent(3,goal) ?
+      6    4  Call: adjacent(3,_177) ?
+      6    4  Exit: adjacent(3,7) ?
+      7    4  Call: connected(7,goal) ?
+      8    5  Call: adjacent(7,goal) ?
+      8    5  Fail: adjacent(7,goal) ?
+      8    5  Call: adjacent(7,_226) ?
+      8    5  Exit: adjacent(7,15) ?
+      9    5  Call: connected(15,goal) ?
+     10    6  Call: adjacent(15,goal) ?
+     10    6  Fail: adjacent(15,goal) ?
+     10    6  Call: adjacent(15,_275) ?
+     10    6  Fail: adjacent(15,_263) ?
+      9    5  Fail: connected(15,goal) ?
+      8    5  Redo: adjacent(7,15) ?
+      8    5  Exit: adjacent(7,16) ?
+      9    5  Call: connected(16,goal) ?
+     10    6  Call: adjacent(16,goal) ?
+     10    6  Exit: adjacent(16,goal) ?
+      9    5  Exit: connected(16,goal) ?
+      7    4  Exit: connected(7,goal) ?
+      5    3  Exit: connected(3,goal) ?
+      3    2  Exit: connected(1,goal) ?
+      1    1  Exit: connected(start,goal) ?
+
+true ?
+
+(1 ms) yes
+{trace}
+
+
+| ?- connected(start,goal).
+      1    1  Call: connected(start,goal) ?
+      2    2  Call: adjacent(start,goal) ?
+      2    2  Fail: adjacent(start,goal) ?
+      2    2  Call: adjacent(start,_79) ?
+      2    2  Exit: adjacent(start,1) ?
+      3    2  Call: connected(1,goal) ?
+      4    3  Call: adjacent(1,goal) ?
+      4    3  Fail: adjacent(1,goal) ?
+      4    3  Call: adjacent(1,_128) ?
+      4    3  Exit: adjacent(1,3) ?
+      5    3  Call: connected(3,goal) ?
+      6    4  Call: adjacent(3,goal) ?
+      6    4  Fail: adjacent(3,goal) ?
+      6    4  Call: adjacent(3,_177) ?
+      6    4  Exit: adjacent(3,7) ?
+      7    4  Call: connected(7,goal) ?
+      8    5  Call: adjacent(7,goal) ?
+      8    5  Fail: adjacent(7,goal) ?
+      8    5  Call: adjacent(7,_226) ?
+      8    5  Exit: adjacent(7,15) ?
+      9    5  Call: connected(15,goal) ?
+     10    6  Call: adjacent(15,goal) ?
+     10    6  Fail: adjacent(15,goal) ?
+     10    6  Call: adjacent(15,_275) ?
+     10    6  Fail: adjacent(15,_263) ?
+      9    5  Fail: connected(15,goal) ?
+      8    5  Redo: adjacent(7,15) ?
+      8    5  Exit: adjacent(7,16) ?
+      9    5  Call: connected(16,goal) ?
+     10    6  Call: adjacent(16,goal) ?
+     10    6  Exit: adjacent(16,goal) ?
+      9    5  Exit: connected(16,goal) ?
+      7    4  Exit: connected(7,goal) ?
+      5    3  Exit: connected(3,goal) ?
+      3    2  Exit: connected(1,goal) ?
+      1    1  Exit: connected(start,goal) ?
+
+true ?
+
+yes
+{trace}
