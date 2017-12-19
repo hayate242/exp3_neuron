@@ -22,7 +22,10 @@ void read_data_set_info( FILE *fp, int *dataNum, int *testDataNum, int *dataSize
   fscanf(fp, "%d\n", dataSize);
   fscanf(fp, "%d\n", outputSize);
 }
-void read_learning_data_set( FILE *fp, const int dataNum, double learningData[6][matrixSize][matrixSize] , double teacherOutput[6][2], double testData[matrixSize][matrixSize] ){
+void read_learning_data_set( FILE *fp, const int dataNum, const int testDataNum,
+   double learningData[6][matrixSize][matrixSize] , double teacherOutput[6][2],
+    double testData[3][matrixSize][matrixSize] ){
+
   int i,j,k;
   int tmp;
   for( i = 0; i < dataNum; i++ ){
@@ -45,13 +48,16 @@ void read_learning_data_set( FILE *fp, const int dataNum, double learningData[6]
     }
     printf("\n");
   }
-  for( i = 0; i < matrixSize; i++ ){
-    for( j = 0; j < matrixSize; j++ ){
-      fscanf(fp, "%d,\n", &tmp);
-      testData[i][j] = (double)tmp;
-      printf("%d,", tmp);
+  for( k = 0; k < testDataNum; k++ ){
+    for( i = 0; i < matrixSize; i++ ){
+      for( j = 0; j < matrixSize; j++ ){
+        fscanf(fp, "%d,\n", &tmp);
+        testData[k][i][j] = (double)tmp;
+        printf("%d,", tmp);
+      }
+      printf("\n");
     }
-    printf("\n");
+    printf("\n\n");
   }
 }
 //ハッシュ関数
@@ -81,20 +87,23 @@ double getRandom(double min,double max)
     }
 	return randval;
 }
-void calc_Z( double z[N], double v[N][N+1], double x[4][2], double y[OutPutNum] ,int p ){
-  int k,i;
+void calc_Z( double z[N], double v[N][N+1], double learningData[matrixSize][matrixSize], double y[OutPutNum] ){
+  int k,i,j;
   //z,yの初期化
   init_zy( z, y );
   // Zkの計算
   for( k = 0; k < N; k++ ){
-      for( i = 0; i < 3; i++ ){
+      for( i = 0; i < matrixSize; i++ ){
+        for( j = 0; j < matrixSize; j++ ){
+
           //zの計算
-          if ( i == N ){
+          if ( i == matrixSize - 1 ){
               z[k] += v[k][i] * 1;
           }else {
-              z[k] += v[k][i] * x[p][i];
+              z[k] += v[k][i] * learningData[i][j];
               // printf("x[%d][%d] = %f\n", p, i, x[p][i]);
           }
+        }
       }
       //printf("!");
       //ハッシュ関数
@@ -117,33 +126,36 @@ void calc_Y( double w[1][N+1], double z[N], double y[OutPutNum]){
   //ハッシュ関数
   // printf("x1 = %f, x2 = %f\n", x[p][0], x[p][1]);
   // printf("before y = %f\n", y);
-  *y = hash(*y);
+  for ( j = 0; j < OutPutNum; j++) {
+    y[j] = hash(y[j]);
+  }
+  // *y = hash(*y);
   // printf("y = %f\n", y);
   // printf("---------------------------\n");
 
 }
 //２乗和を再計算
-double recalculate_error(double x[4][2], double v[N][N+1], double w[1][N+1], double t[4]){
+double recalculate_error(double learningData[6][matrixSize][matrixSize], double v[N][N+1], double w[1][N+1], double t[6][2], int dataNum ,int outputSize){
     int p,i,j,k;
-    double y = 0;
+    double y[outputSize];
     double z[N];
     double result_error = 0;
 
-    for( p = 0; p < 4; p++ ){
+    for( p = 0; p < dataNum; p++ ){
         //zの計算
-        calc_Z( z, v, x, &y, p);
+        calc_Z( z, v, learningData[p], y );
         //yの計算
-        calc_Y( w, z, &y);
+        calc_Y( w, z, y);
         //教師信号との誤差の計算(２乗和)
         // result_error += (t[p] - y)*(t[p] - y);
-        result_error += pow((t[p] - y),2.0);
-        // result_error += (t[p] - y);
-
+        for( i = 0; i < OutPutNum; i++ ){
+          result_error += pow((t[p][i] - y[i]),2.0);
+        }
     }
      // printf("result_error = %f\n", result_error);
     return result_error;
 }
-void print_w(double w[1][N+1]){
+void print_w(double w[OutPutNum][N+1]){
   //結果の表示
   int j,k;
   for( j = 0; j < 1; j++ ){
@@ -155,17 +167,30 @@ void print_w(double w[1][N+1]){
 }
 
 int main(){
-  int dataNum,testDataNum,dataSize,outputSize;
-  double learningData[6][matrixSize][matrixSize];
-  double teacherOutput[6][2];
-  double testData[matrixSize][matrixSize];
   FILE *fp;
   int a;
   char fname[] = "data_set.dat";
+  int dataNum,testDataNum,dataSize,outputSize;
+  // fp = openFile( fp, "data_set.dat" );
+  fp = fopen( fname, "r" );
+  if( fp == NULL ){
+    printf( "%sファイルが開けません¥n", fname );
+    return -1;
+  }
 
+  read_data_set_info(fp, &dataNum, &testDataNum, &dataSize, &outputSize);
+  printf("%d\n",dataNum);
+  printf("%d\n",testDataNum);
+  printf("%d\n",dataSize);
+  printf("%d\n",outputSize);
+
+  double learningData[6][matrixSize][matrixSize];
+  double teacherOutput[6][2];
+  double testData[testDataNum][matrixSize][matrixSize];
   double v[N][N+1];
   double w[outputSize][N+1];
   double z[N];
+  read_learning_data_set(fp, dataNum, testDataNum, learningData, teacherOutput, testData);
 
   int i,j,k;
   int p;
@@ -181,18 +206,6 @@ int main(){
   int cnt = 0;
   int is_success = 0;
 
-  // fp = openFile( fp, "data_set.dat" );
-  fp = fopen( fname, "r" );
-  if( fp == NULL ){
-    printf( "%sファイルが開けません¥n", fname );
-    return -1;
-  }
-
-  read_data_set_info(fp, &dataNum, &testDataNum, &dataSize, &outputSize);
-  printf("%d\n",outputSize);
-  read_learning_data_set(fp, dataNum, learningData, teacherOutput, testData);
-
-  return 0;
 
   /* 乱数の種を初期化 */
   srand((unsigned)time(NULL));
@@ -205,13 +218,13 @@ int main(){
     for( i = 0; i < N; i++ ){
         for( j = 0; j < N+1; j++ ){
             v[i][j] = getRandom( -1.0, 1.0 );
-            printf("v[%d][%d] = %f\n", i, j, v[i][j]);
+            printf("v[%d][%d] = %f;\n", i, j, v[i][j]);
         }
     }
     for( j = 0; j < outputSize; j++ ){
         for( k = 0; k < N+1; k++ ){
           w[j][k] = getRandom( -1.0, 1.0 );
-          printf("w[%d][%d] = %f  ", j, k, w[j][k]);
+          printf("w[%d][%d] = %f;  ", j, k, w[j][k]);
         }
         printf("\n");
     }
@@ -222,10 +235,8 @@ int main(){
         p = rand() % dataNum;
         // p = cnt % 4;
         // printf("p = %d\n", p);
-        //z,yの初期化
-        init_zy( z, y );
         //zの計算
-        calc_Z( z, v, learningData, y, p);
+        calc_Z( z, v, learningData[p], y );
         //yの計算
         calc_Y( w, z, y);
 
@@ -245,7 +256,7 @@ int main(){
         }
 
         //再計算
-        result = recalculate_error( learningData, v, w ,teacherOutput);
+        result = recalculate_error( learningData, v, w ,teacherOutput, dataNum, outputSize );
 
         //結果の表示
         cnt++;

@@ -161,8 +161,6 @@ int main()
           p = rand() % 4;
           // p = cnt % 4;
           // printf("p = %d\n", p);
-          //z,yの初期化
-          init_zy( z, &y );
           //zの計算
           calc_Z( z, v, x, &y, p);
           //yの計算
