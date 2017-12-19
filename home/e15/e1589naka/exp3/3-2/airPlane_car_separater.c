@@ -116,7 +116,7 @@ void calc_Y( double w[1][N+1], double z[N], double y[OutPutNum]){
   //yの計算
   for( j = 0; j < OutPutNum; j++){
       for( k = 0; k < N+1; k++ ){
-          if ( k == 2 ){
+          if ( k == N ){
               y[j] += w[j][k] * 1;
           }else {
               y[j] += w[j][k] * z[k];
@@ -148,9 +148,14 @@ double recalculate_error(double learningData[6][matrixSize][matrixSize], double 
         calc_Y( w, z, y);
         //教師信号との誤差の計算(２乗和)
         // result_error += (t[p] - y)*(t[p] - y);
+        // printf("%d (", p);
         for( i = 0; i < OutPutNum; i++ ){
           result_error += pow((t[p][i] - y[i]),2.0);
+          //結果の出力
+          // printf("%f ,", y[i]);
         }
+        // printf(")\n");
+
     }
      // printf("result_error = %f\n", result_error);
     return result_error;
@@ -158,12 +163,38 @@ double recalculate_error(double learningData[6][matrixSize][matrixSize], double 
 void print_w(double w[OutPutNum][N+1]){
   //結果の表示
   int j,k;
-  for( j = 0; j < 1; j++ ){
+  for( j = 0; j < OutPutNum; j++ ){
       for( k = 0; k < N+1; k++ ){
-          printf("w[%d][%d] = %f  ", j, k, w[j][k]);
+          printf("w[%d][%d] = %f;  ", j, k, w[j][k]);
       }
       printf("\n");
   }
+  printf("----------------------\n"); 
+}
+double recalculate_error_print(double learningData[6][matrixSize][matrixSize], double v[N][N+1], double w[1][N+1], double t[6][2], int dataNum ,int outputSize){
+    int p,i,j,k;
+    double y[outputSize];
+    double z[N];
+    double result_error = 0;
+
+    for( p = 0; p < dataNum; p++ ){
+        //zの計算
+        calc_Z( z, v, learningData[p], y );
+        //yの計算
+        calc_Y( w, z, y);
+        //教師信号との誤差の計算(２乗和)
+        // result_error += (t[p] - y)*(t[p] - y);
+        printf("%d (", p);
+        for( i = 0; i < OutPutNum; i++ ){
+          result_error += pow((t[p][i] - y[i]),2.0);
+          //結果の出力
+          printf("%f ,", y[i]);
+        }
+        printf(")\n");
+
+    }
+     // printf("result_error = %f\n", result_error);
+    return result_error;
 }
 
 int main(){
@@ -218,7 +249,7 @@ int main(){
     for( i = 0; i < N; i++ ){
         for( j = 0; j < N+1; j++ ){
             v[i][j] = getRandom( -1.0, 1.0 );
-            printf("v[%d][%d] = %f;\n", i, j, v[i][j]);
+            printf("v[%d][%d] = %f;  ", i, j, v[i][j]);
         }
     }
     for( j = 0; j < outputSize; j++ ){
@@ -267,6 +298,7 @@ int main(){
     }
     //結果の表示
     print_w(w);
+    recalculate_error_print( learningData, v, w ,teacherOutput, dataNum, outputSize );
 
     if (cnt == Max+1) {
       printf("cnt = %d\n", cnt);
